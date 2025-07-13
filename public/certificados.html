@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Certificados</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="logo-central">
+    <img src="img/logo-karate.png" alt="Marca Karatê">
+  </div>
+  <main class="certificados">
+    <h2>📥 Enviar Certificado</h2>
+    <form action="/upload-certificado" method="post" enctype="multipart/form-data">
+      <input type="text" name="nome" placeholder="Nome do aluno" required />
+      <label for="certificado">Certificado (PDF):</label>
+      <input type="file" id="certificado" name="certificado" accept=".pdf" required title="Selecione o arquivo do certificado em PDF" />
+      <button type="submit">Enviar</button>
+    </form>
+  </main>
+</body>
+</html>

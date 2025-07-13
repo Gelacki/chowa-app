@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cadastro Karatê</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="logo-central">
+    <img src="img/logo-karate.png" alt="Marca Karatê">
+  </div>
+  <header class="gb-header">
+    <h1>🥋 Sistema de Cadastro Chowa Karatê</h1>
+  
+    <nav>
+  <ul id="menu-principal">
+    <!-- Itens comuns -->
+    <li><a href="login.html">Login</a></li>
+    <li><a href="kihon.html">Kihon</a></li>
+    <!-- Itens específicos aparecerão dinamicamente -->
+  </ul>
+</nav>
+
+<script>
+// Exemplo: tipo vindo do backend ou localStorage
+const tipoUsuario = "Professor"; // ou "Aluno", "Admin"
+
+const menu = document.getElementById("menu-principal");
+
+if (tipoUsuario === "Professor") {
+  menu.innerHTML += `
+    <li><a href="cadastro.html">Cadastrar Aluno</a></li>
+    <li><a href="certificados.html">Certificados</a></li>
+    <li><a href="perfil.html">Perfil</a></li>
+  `;
+} else if (tipoUsuario === "Aluno") {
+  menu.innerHTML += `
+    <li><a href="perfil.html">Meu Perfil</a></li>
+    <li><a href="certificados.html">Meus Certificados</a></li>
+  `;
+}
+</script>
+
+  </header>
+
+  <main>
+    <section class="intro">
+      <h2>Bem-vindo!</h2>
+      <p>Gerencie seus cadastros e graduações com facilidade.</p>
+    </section>
+  </main>
+
+<form action="/cadastro" method="post" enctype="multipart/form-data">
+  <h2>Cadastro de Aluno/Professor</h2>
+
+  <!-- Foto -->
+  <label>📸 Foto:</label>
+  <input type="file" name="foto" accept="image/*" required title="Foto do aluno ou professor" />
+
+  <!-- Dados Pessoais -->
+  <label>👤 Nome Completo:</label>
+  <input type="text" name="nome" required title="Nome completo" placeholder="Digite o nome completo" />
+
+  <label>🎂 Data de Nascimento:</label>
+  <input type="date" name="nascimento" required oninput="calcularIdade(this.value)" title="Data de nascimento" placeholder="Selecione a data de nascimento" />
+  
+  <label>📅 Idade:</label>
+  <input type="text" id="idade" readonly title="Idade" placeholder="Idade calculada" />
+
+  <label>🏠 Endereço:</label>
+  <input type="text" name="endereco" required title="Endereço" placeholder="Digite o endereço" />
+
+  <label>🪪 RG:</label>
+  <input type="text" name="rg" required title="RG" placeholder="Digite o RG" />
+
+  <label>🧾 CPF:</label>
+  <input type="text" name="cpf" required title="CPF" placeholder="Digite o CPF" />
+
+  <label>👩 Nome da Mãe:</label>
+  <input type="text" name="mae" required title="Nome da mãe" placeholder="Digite o nome da mãe" />
+
+  <label>👨 Nome do Pai:</label>
+  <input type="text" name="pai" title="Nome do pai" placeholder="Digite o nome do pai" />
+
+  <!-- Contatos -->
+  <label>📞 Telefone:</label>
+  <input type="tel" name="telefone" title="Telefone" placeholder="Digite o telefone" />
+
+  <label>📱 WhatsApp:</label>
+  <input type="tel" name="whatsapp" title="WhatsApp" placeholder="Digite o WhatsApp" />
+
+  <label>📸 Instagram:</label>
+  <input type="text" name="instagram" title="Instagram" placeholder="Digite o Instagram" />
+
+  <label>📘 Facebook:</label>
+  <input type="text" name="facebook" title="Facebook" placeholder="Digite o Facebook" />
+
+  <!-- Tipo e graduação -->
+  <label>🧑‍🏫 Tipo:</label>
+  <select name="tipo" title="Tipo de usuário">
+    <option value="Aluno">Aluno</option>
+    <option value="Professor">Professor</option>
+  </select>
+
+  <label>🥋 Graduação:</label>
+  <input type="text" name="graduacao" title="Graduação" placeholder="Digite a graduação" />
+
+  <!-- Dados de login -->
+<label>📧 Email para login:</label>
+<input type="email" name="email" required title="Email para login" placeholder="Digite seu email" />
+
+<label>🔒 Senha:</label>
+<input type="password" name="senha" required title="Senha para login" placeholder="Digite sua senha" />
+
+  <button type="submit">Cadastrar</button>
+</form>
+
+<script>
+function calcularIdade(dataNasc) {
+  const hoje = new Date();
+  const nasc = new Date(dataNasc);
+  let idade = hoje.getFullYear() - nasc.getFullYear();
+  const mes = hoje.getMonth() - nasc.getMonth();
+  if (mes < 0 || (mes === 0 && hoje.getDate() < nasc.getDate())) {
+    idade--;
+  }
+  document.getElementById("idade").value = idade + " anos";
+}
+</script>
+
+  <footer>
+    <p>&copy; 2025 Sistema Karatê | Desenvolvido por Aryell</p>
+  </footer>
+</body>
+</html>
