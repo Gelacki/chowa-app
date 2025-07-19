@@ -1,141 +1,83 @@
+// Importando os pacotes
+const express = require('express');
 const mysql = require('mysql2');
+const multer = require('multer');
+const bodyParser = require('body-parser');
+const app = express();
 
+// Middleware
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(express.static('public')); // acessa HTML e CSS da pasta public
+
+// Conexão com MySQL
 const conexao = mysql.createConnection({
   host: 'localhost',
   user: 'root',
-  password: 'sua_senha',
+  password: 'SUA_SENHA',
   database: 'karate'
 });
-
 conexao.connect(err => {
   if (err) throw err;
   console.log("✅ Conectado ao MySQL!");
 });
 
-// Middlewares
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static("public"));
-
-// Configurações de upload
-const uploadFoto = multer({ dest: "uploads/fotos/" });
-const uploadCertificado = multer({ dest: "uploads/certificados/" });
-
-// Rota de cadastro
-app.post("/cadastro", uploadFoto.single("foto"), (req, res) => {
-  const {
-    nome, nascimento, endereco, rg, cpf,
-    mae, pai, telefone, whatsapp, instagram, facebook,
-    tipo, graduacao, email, senha
-  } = req.body;
-
-  const foto = req.file ? req.file.filename : "";
-
-  const filePath = "database/karate.xlsx";
-  let data = [];
-
-  if (fs.existsSync(filePath)) {
-    const workbook = XLSX.readFile(filePath);
-    const sheet = workbook.Sheets["Cadastro"];
-    if (sheet) {
-      data = XLSX.utils.sheet_to_json(sheet);
-    }
+// Configuração do Multer para foto
+const storageFoto = multer.diskStorage({
+  destination: 'uploads/fotos/',
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + '-' + file.originalname);
   }
+});
+const uploadFoto = multer({ storage: storageFoto });
 
-  data.push({
-    Nome: nome,
-    DataNascimento: nascimento,
-    Endereço: endereco,
-    RG: rg,
-    CPF: cpf,
-    Mãe: mae,
-    Pai: pai,
-    Telefone: telefone,
-    WhatsApp: whatsapp,
-    Instagram: instagram,
-    Facebook: facebook,
-    Tipo: tipo,
-    Graduação: graduacao,
-    Email: email,
-    Senha: senha,
-    Foto: foto
+// Configuração do Multer para certificado
+const storageCertificado = multer.diskStorage({
+  destination: 'uploads/certificados/',
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + '-' + file.originalname);
+  }
+});
+const uploadCertificado = multer({ storage: storageCertificado });
+
+// Rota de cadastro com foto
+app.post("/cadastro", uploadFoto.single("foto"), (req, res) => {
+  const dados = req.body;
+  dados.foto = req.file.filename;
+  const sql = "INSERT INTO usuarios SET ?";
+  conexao.query(sql, dados, (err) => {
+    if (err) return res.status(500).send("Erro ao cadastrar");
+    res.send("✅ Cadastro realizado!");
   });
-
-  const worksheet = XLSX.utils.json_to_sheet(data);
-  const workbook = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(workbook, worksheet, "Cadastro");
-  XLSX.writeFile(workbook, filePath);
-
-  res.send("✅ Cadastro realizado com sucesso!");
 });
 
 // Rota de login
 app.post("/login", (req, res) => {
   const { email, senha } = req.body;
-  const filePath = "database/karate.xlsx";
-
-  if (!fs.existsSync(filePath)) return res.send("⛔ Banco de dados não encontrado.");
-
-  const workbook = XLSX.readFile(filePath);
-  const sheet = workbook.Sheets["Cadastro"];
-  const data = XLSX.utils.sheet_to_json(sheet);
-
-  const usuario = data.find(u => u.Email === email && u.Senha === senha);
-
-  if (usuario) {
-    res.redirect("/perfil.html"); // pode ser substituído por rota protegida
-  } else {
-    res.send("❌ Email ou senha incorretos.");
-  }
+  const sql = "SELECT * FROM usuarios WHERE email = ? AND senha = ?";
+  conexao.query(sql, [email, senha], (err, results) => {
+    if (err) return res.status(500).send("Erro no login");
+    if (results.length === 0) return res.status(401).send("Credenciais inválidas");
+    res.send("✅ Login autorizado!");
+  });
 });
 
-// Upload de certificado
+// Rota para envio de certificado
 app.post("/upload-certificado", uploadCertificado.single("certificado"), (req, res) => {
   const { nome } = req.body;
-  const arquivo = req.file ? req.file.filename : "";
-
-  const filePath = "database/karate.xlsx";
-  let certData = [];
-
-  if (fs.existsSync(filePath)) {
-    const workbook = XLSX.readFile(filePath);
-    const sheet = workbook.Sheets["Certificados"];
-    if (sheet) {
-      certData = XLSX.utils.sheet_to_json(sheet);
-    }
-  }
-
-  certData.push({
-    Aluno: nome,
-    Arquivo: arquivo,
-    Data: new Date().toLocaleDateString()
-  });
-
-  const worksheet = XLSX.utils.json_to_sheet(certData);
-  const workbook = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(workbook, worksheet, "Certificados");
-  XLSX.writeFile(workbook, filePath);
-
-  res.send(`📄 Certificado de ${nome} enviado com sucesso.`);
-});
-
-// Listagem de certificados
-app.get("/certificados", (req, res) => {
-  const pasta = path.join(__dirname, "uploads/certificados");
-
-  fs.readdir(pasta, (err, arquivos) => {
-    if (err) return res.send("❌ Erro ao listar certificados.");
-
-    let html = "<h2>📁 Certificados Disponíveis:</h2><ul>";
-    arquivos.forEach(file => {
-      html += `<li><a href="/uploads/certificados/${file}" download>${file}</a></li>`;
+  const arquivo = req.file.filename;
+  const sqlBusca = "SELECT id FROM usuarios WHERE nome = ?";
+  conexao.query(sqlBusca, [nome], (err, results) => {
+    if (err || results.length === 0) return res.status(400).send("Usuário não encontrado");
+    const aluno_id = results[0].id;
+    const sql = "INSERT INTO certificados SET ?";
+    conexao.query(sql, { aluno_id, arquivo, data_envio: new Date() }, err2 => {
+      if (err2) return res.status(500).send("Erro ao salvar certificado");
+      res.send("✅ Certificado enviado!");
     });
-    html += "</ul>";
-
-    res.send(html);
   });
 });
 
-// Inicializa servidor
-app.listen(PORT, () => {
-  console.log(`🥋 Servidor ativo em http://localhost:${PORT}`);
+app.listen(3000, () => {
+  console.log("Servidor rodando em http://localhost:3000");
 });

@@ -1,39 +1,30 @@
-function abrirMateria(faixa) {
-  const materias = {
+function carregarFaixa(faixa) {
+  const faixas = {
     branca: {
       titulo: "Faixa Branca",
-      conteudo: ["Zenkutsu Dachi", "Oi Tsuki", "Mae Geri"],
+      tecnicas: ["Zenkutsu Dachi", "Oi Tsuki", "Mae Geri"],
       imagem: "img/faixa-branca.png",
-      video: "https://www.youtube.com/embed/VIDEOID",
+      video: "https://www.youtube.com/embed/VIDEO_ID1",
       audio: "materiais/audio-branca.mp3",
       pdf: "materiais/branca.pdf"
     },
-    preta_1: {
-      titulo: "Faixa Preta – 1º Dan",
-      conteudo: ["Kata Heian Godan", "Kumite Avançado"],
-      imagem: "img/faixa-preta-1dan.png",
-      video: "https://www.youtube.com/embed/VIDEOID2",
+    preta1: {
+      titulo: "Faixa Preta 1º Dan",
+      tecnicas: ["Kata Heian Godan", "Kumite Avançado"],
+      imagem: "img/faixa-preta.png",
+      video: "https://www.youtube.com/embed/VIDEO_ID2",
       audio: "materiais/audio-preta1.mp3",
-      pdf: "materiais/preta-1dan.pdf"
+      pdf: "materiais/preta1.pdf"
     }
   };
 
-  const faixaData = materias[faixa];
-  const container = document.getElementById("materia-container");
-  container.innerHTML = `
-    <h3>${faixaData.titulo}</h3>
-    <img src="${faixaData.imagem}" width="100"><br>
-    <ul>${faixaData.conteudo.map(t => `<li>${t}</li>`).join("")}</ul>
-    <audio controls src="${faixaData.audio}"></audio><br>
-    <iframe width="100%" height="315" src="${faixaData.video}" frameborder="0"></iframe><br>
-    <a href="${faixaData.pdf}" class="btn" target="_blank">📥 Baixar PDF</a>
+  const f = faixas[faixa];
+  document.getElementById("conteudo-faixa").innerHTML = `
+    <h3>${f.titulo}</h3>
+    <ul>${f.tecnicas.map(t => `<li>${t}</li>`).join("")}</ul>
+    <img src="${f.imagem}" width="100" />
+    <iframe src="${f.video}" allowfullscreen></iframe>
+    <audio controls src="${f.audio}"></audio>
+    <p><a href="${f.pdf}" target="_blank">📄 Baixar PDF</a></p>
   `;
 }
-
-// Remova o código abaixo deste arquivo e coloque-o em seu arquivo de backend Node.js (por exemplo, server.js ou app.js)
-// app.get("/cadastro", (req, res) => {
-//   if (req.session.tipo !== "Professor") {
-//     return res.send("⛔ Acesso negado.");
-//   }
-//   res.sendFile(path.join(__dirname, "public/cadastro.html"));
-// });

@@ -1,20 +1,18 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login - Sistema Karatê</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <title>Login - Karate App</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="logo-central">
-    <img src="img/logo-karate.png" alt="Marca Karatê">
-  </div>
-  <main class="login-container">
-    <h2>🔐 Acesso ao Sistema</h2>
-    <form action="/login" method="post" class="login-form">
-      <input type="email" name="email" placeholder="Email" required />
-      <input type="password" name="senha" placeholder="Senha" required />
+  <main>
+    <h2>🔐 Login</h2>
+    <form action="/login" method="post">
+      <label>Email:</label>
+      <input type="email" name="email" required />
+      <label>Senha:</label>
+      <input type="password" name="senha" required />
       <button type="submit">Entrar</button>
     </form>
   </main>

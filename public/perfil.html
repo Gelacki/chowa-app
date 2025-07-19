@@ -2,22 +2,40 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Perfil do Usuário</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="logo-central">
-    <img src="img/logo-karate.png" alt="Marca Karatê">
-  </div>
-  <main class="perfil">
-    <h2>👤 Perfil do Usuário</h2>
-    <img src="uploads/fotos/user.jpg" class="perfil-img" alt="Foto do usuário" />
-    <div class="info">
-      <p><strong>Nome:</strong> João</p>
-      <p><strong>Faixa:</strong> Faixa Preta</p>
-    </div>
-    <a href="certificados.html" class="btn">📄 Ver Certificados</a>
+  <main>
+    <h2>👤 Meu Perfil</h2>
+    <img id="foto-perfil" src="" width="120" alt="Foto do usuário" />
+    <ul id="info-perfil">
+      <li><strong>Nome:</strong> <span id="nome"></span></li>
+      <li><strong>Email:</strong> <span id="email"></span></li>
+      <li><strong>Graduação:</strong> <span id="graduacao"></span></li>
+      <li><strong>Tipo:</strong> <span id="tipo"></span></li>
+      <li><strong>Telefone:</strong> <span id="telefone"></span></li>
+    </ul>
   </main>
+
+  <script>
+    // Aqui você pode puxar o email do usuário logado via sessão, cookie, ou query params
+    const emailUsuario = "usuario@example.com"; // substituir por valor real
+
+    fetch(`/perfil/${emailUsuario}`)
+      .then(res => res.json())
+      .then(dados => {
+        document.getElementById("foto-perfil").src = "uploads/fotos/" + dados.foto;
+        document.getElementById("nome").textContent = dados.nome;
+        document.getElementById("email").textContent = dados.email;
+        document.getElementById("graduacao").textContent = dados.graduacao;
+        document.getElementById("tipo").textContent = dados.tipo;
+        document.getElementById("telefone").textContent = dados.telefone;
+      })
+      .catch(err => {
+        alert("Não foi possível carregar o perfil.");
+        console.error(err);
+      });
+  </script>
 </body>
 </html>
