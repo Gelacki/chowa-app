@@ -30,9 +30,10 @@ function abrirMateria(faixa) {
   `;
 }
 
-app.get("/cadastro", (req, res) => {
-  if (req.session.tipo !== "Professor") {
-    return res.send("⛔ Acesso negado.");
-  }
-  res.sendFile(path.join(__dirname, "public/cadastro.html"));
-});
+// Remova o código abaixo deste arquivo e coloque-o em seu arquivo de backend Node.js (por exemplo, server.js ou app.js)
+// app.get("/cadastro", (req, res) => {
+//   if (req.session.tipo !== "Professor") {
+//     return res.send("⛔ Acesso negado.");
+//   }
+//   res.sendFile(path.join(__dirname, "public/cadastro.html"));
+// });

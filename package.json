@@ -1,20 +1,18 @@
 {
   "name": "karate-app",
   "version": "1.0.0",
+  "description": "Sistema de gerenciamento de alunos e professores de Karatê",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
   "dependencies": {
     "body-parser": "^2.2.0",
     "express": "^5.1.0",
-    "express-session": "^1.18.1",
-    "multer": "^2.0.1",
+    "multer": "^2.0.2",
+    "mysql2": "^3.14.2",
     "xlsx": "^0.18.5"
-  }
+  },
+  "author": "Aryell",
+  "license": "MIT"
 }

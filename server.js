@@ -1,12 +1,16 @@
-const express = require("express");
-const multer = require("multer");
-const bodyParser = require("body-parser");
-const XLSX = require("xlsx");
-const fs = require("fs");
-const path = require("path");
+const mysql = require('mysql2');
 
-const app = express();
-const PORT = 3000;
+const conexao = mysql.createConnection({
+  host: 'localhost',
+  user: 'root',
+  password: 'sua_senha',
+  database: 'karate'
+});
+
+conexao.connect(err => {
+  if (err) throw err;
+  console.log("✅ Conectado ao MySQL!");
+});
 
 // Middlewares
 app.use(bodyParser.urlencoded({ extended: true }));
